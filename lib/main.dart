@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
+import 'screens/map_placeholder_screen.dart';
+import 'screens/favorites_placeholder_screen.dart';
 
 void main() {
   runApp(const ExploraEcApp());
@@ -11,135 +14,50 @@ class ExploraEcApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ExploraEC',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        // Design DNA: Se utiliza la tipografía estándar del sistema (sans-serif)
-        // con pesos geométricos y tracking ajustado en sustitución de 'Plus Jakarta Sans',
-        // para no requerir fuentes personalizadas ni dependencias externas en pubspec.yaml.
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF006948), // Verde Esmeralda (Primary)
-          primary: const Color(0xFF006948),
-          surface: const Color(0xFFFAF8FF), // Fondo claro
-        ),
-        scaffoldBackgroundColor: const Color(0xFFFAF8FF),
-      ),
-      home: const BienvenidaScreen(),
+      home: const RootShell(),
     );
   }
 }
 
-class BienvenidaScreen extends StatelessWidget {
-  const BienvenidaScreen({super.key});
+/// Contenedor raíz con la barra de navegación inferior — Sesión 2.
+class RootShell extends StatefulWidget {
+  const RootShell({super.key});
+
+  @override
+  State<RootShell> createState() => _RootShellState();
+}
+
+class _RootShellState extends State<RootShell> {
+  int _indiceActual = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF8FF),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Espaciador superior para centrado vertical armónico
-              const SizedBox(height: 20),
+      // TODO(sesion-02): borra la línea de abajo y descomenta el bloque completo. (cuerpo según pestaña)
+      // Por qué: un body fijo en HomeScreen ignoraría qué pestaña está
+      // activa — este switch sobre _indiceActual es lo que hace que
+      // BottomNavigationBar (más abajo) realmente cambie de contenido
+      // al tocar cada pestaña, en vez de solo resaltarla.
+      
+      body: switch (_indiceActual) {
+        0 => const HomeScreen(),
+        1 => const MapPlaceholderScreen(),
+        _ => const FavoritesPlaceholderScreen(),
+      },
 
-              // Bloque central: Ícono con insignia y halo, Título y Subtítulo
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Insignia circular verde esmeralda con halo difuminado suave
-                  Container(
-                    width: 104,
-                    height: 104,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0xFF059669).withValues(alpha: 0.12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF059669).withValues(alpha: 0.18),
-                          blurRadius: 32,
-                          spreadRadius: 8,
-                        ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 68,
-                      height: 68,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF059669), // Emerald Vista
-                      ),
-                      child: const Icon(
-                        Icons.explore_rounded, // Ícono de exploración y ubicación
-                        size: 38,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 36),
-
-                  // Título principal de la aplicación
-                  const Text(
-                    'ExploraEC',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF131B2E), // Obsidian Slate
-                      letterSpacing: -0.6,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Subtítulo descriptivo centrado
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 280),
-                    child: const Text(
-                      'Descubre y guarda lugares cerca de ti',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 1.45,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF3D4A42), // Slate Variant
-                        letterSpacing: 0.1,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Botón principal de ancho completo tipo píldora
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Acción de bienvenida (sin navegación funcional por ahora)
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF059669), // Verde Esmeralda
-                    foregroundColor: Colors.white,
-                    elevation: 3,
-                    shadowColor: const Color(0xFF059669).withValues(alpha: 0.35),
-                    shape: const StadiumBorder(),
-                  ),
-                  child: const Text(
-                    'Empezar',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      // TODO(sesion-02): borra la línea de abajo y descomenta el bloque completo. (barra inferior)
+      // Por qué: sin este widget no hay pestañas que tocar — junto con
+      // el switch de arriba, BottomNavigationBar alterna entre
+      // Inicio/Mapa/Favoritos sin apilarlas como haría Navigator.push.
+      
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _indiceActual,
+        onTap: (i) => setState(() => _indiceActual = i),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
+        ],
       ),
     );
   }
