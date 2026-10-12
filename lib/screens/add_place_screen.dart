@@ -73,10 +73,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       lng: -78.4859,
                     ));
                     Get.back();
-                    Get.snackbar(
-                        'Lugar agregado',
-                        'Ya aparece en Inicio',
-                      );
+                    Get.snackbar('Lugar agregado', 'Ya aparece en Inicio');
                   }
                 },
                 child: const Text('Guardar'),

@@ -1,6 +1,7 @@
 // ExploraEC — Sesión 2: fundamentos de Dart
 // Ejecutar con: dart run lib/playground/dart_basics.dart
 
+
 void main() {
   ejercicioVariables();
 
