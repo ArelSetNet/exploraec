@@ -36,7 +36,7 @@ class GastosScreen extends GetView<GastosController> {
   Widget _buildGastos(BuildContext context, AuthController auth) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text('${'gastos'.tr} (${controller.totalEnServidor.value})')),
+        title: Obx(() => Text('${'gastos'.tr} (${controller.gastosFiltrados.length})')),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -103,15 +103,49 @@ class GastosScreen extends GetView<GastosController> {
                   ),
                 ],
               ),
+            _buildFiltroCategorias(),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: controller.cargarGastos,
-                child: _buildLista(context, controller.gastos),
-              ),
+              child: controller.gastosFiltrados.isEmpty
+                  ? const EmptyView(mensaje: 'No hay gastos en esta categoría')
+                  : RefreshIndicator(
+                      onRefresh: controller.cargarGastos,
+                      child: _buildLista(context, controller.gastosFiltrados),
+                    ),
             ),
           ],
         );
       }),
+    );
+  }
+
+  Widget _buildFiltroCategorias() {
+    final categorias = controller.categoriasDisponibles;
+    if (categorias.isEmpty) return const SizedBox.shrink();
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          FilterChip(
+            label: const Text('Todas'),
+            selected: controller.categoriaSeleccionada.value.isEmpty,
+            onSelected: (_) => controller.seleccionarCategoria(''),
+          ),
+          const SizedBox(width: 8),
+          ...categorias.map((cat) {
+            final seleccionada = controller.categoriaSeleccionada.value == cat;
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilterChip(
+                label: Text(cat),
+                selected: seleccionada,
+                onSelected: (_) => controller.seleccionarCategoria(cat),
+              ),
+            );
+          }),
+        ],
+      ),
     );
   }
 

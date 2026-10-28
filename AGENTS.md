@@ -40,5 +40,5 @@ Los dos deben terminar sin errores. Si fallan, corrige el código; no desactives
 
 <!-- Paso 6 de la práctica: escribe aquí dos reglas propias para ESTE proyecto. -->
 
-- (regla 1)
-- (regla 2)
+- Los nombres de clases, funciones y variables deben mantenerse en español, siguiendo el estilo existente del proyecto.
+- Antes de crear un widget nuevo, revisa si ya existe uno similar en lib/widgets/ y reutilízalo cuando sea posible.
